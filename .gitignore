@@ -1,0 +1,7 @@
+/telvar
+telvar.db
+telvar.yaml
+*.exe
+dist/
+.env
+.DS_Store
