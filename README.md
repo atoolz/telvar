@@ -197,4 +197,4 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## Credits
 
-Built by [@ahlert](https://github.com/ahlert) as part of [AToolZ](https://github.com/atoolz).
+Built by [@andreahlert](https://github.com/andreahlert) as part of [AToolZ](https://github.com/atoolz).
