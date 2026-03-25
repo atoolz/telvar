@@ -147,15 +147,15 @@ These are deliberate omissions, not missing features. Telvar does one thing well
 - [x] CLI foundation (serve, discover, config init)
 - [x] Entity model with inference engine
 - [x] SQLite store
-- [ ] GitHub org connector
-- [ ] Web UI with htmx
-- [ ] Scorecard engine
-- [ ] CVE checking via osv.dev
-- [ ] Docs viewer (render repo markdown)
-- [ ] Kubernetes connector
-- [ ] PagerDuty connector
-- [ ] Team pages
-- [ ] Full-text search (SQLite FTS5)
+- [x] GitHub org connector
+- [x] Web UI with htmx
+- [x] Scorecard engine
+- [x] CVE checking via osv.dev
+- [x] Docs viewer (render repo markdown)
+- [x] Kubernetes connector
+- [x] PagerDuty connector
+- [x] Team pages
+- [x] Full-text search (SQLite FTS5)
 
 ## Known limitations (WOUNDED, not dead)
 

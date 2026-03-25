@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"log/slog"
 	"net/http"
-	"sort"
 	"strings"
 
 	"github.com/ahlert/telvar/internal/catalog"
@@ -265,24 +264,11 @@ func (s *Server) searchEntities(q, kind, lang string) ([]catalog.Entity, error) 
 }
 
 func (s *Server) collectLanguages() []string {
-	all, err := s.store.ListEntities("", 0)
+	langs, err := s.store.ListLanguages()
 	if err != nil {
 		slog.Error("collecting languages", "error", err)
 		return nil
 	}
-
-	seen := make(map[string]bool)
-	for _, e := range all {
-		if e.Language != "" {
-			seen[e.Language] = true
-		}
-	}
-
-	langs := make([]string, 0, len(seen))
-	for l := range seen {
-		langs = append(langs, l)
-	}
-	sort.Strings(langs)
 	return langs
 }
 

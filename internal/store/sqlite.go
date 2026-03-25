@@ -400,6 +400,24 @@ func (s *Store) listEntitiesWhere(where string, args ...any) (_ []catalog.Entity
 	return entities, rows.Err()
 }
 
+func (s *Store) ListLanguages() ([]string, error) {
+	rows, err := s.db.Query("SELECT DISTINCT language FROM entities WHERE language != '' ORDER BY language")
+	if err != nil {
+		return nil, fmt.Errorf("listing languages: %w", err)
+	}
+	defer rows.Close()
+
+	var langs []string
+	for rows.Next() {
+		var lang string
+		if err := rows.Scan(&lang); err != nil {
+			return nil, fmt.Errorf("scanning language: %w", err)
+		}
+		langs = append(langs, lang)
+	}
+	return langs, rows.Err()
+}
+
 func (s *Store) CountEntities() (int, error) {
 	var count int
 	err := s.db.QueryRow("SELECT COUNT(*) FROM entities").Scan(&count)

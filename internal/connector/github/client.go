@@ -162,7 +162,7 @@ func (c *Client) get(ctx context.Context, url string) ([]byte, http.Header, erro
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 5*1024*1024))
 	if err != nil {
 		return nil, nil, fmt.Errorf("reading response body: %w", err)
 	}
