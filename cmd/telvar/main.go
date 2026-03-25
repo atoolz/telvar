@@ -13,6 +13,8 @@ import (
 	"github.com/ahlert/telvar/assets"
 	"github.com/ahlert/telvar/internal/config"
 	ghconnector "github.com/ahlert/telvar/internal/connector/github"
+	k8sconnector "github.com/ahlert/telvar/internal/connector/kubernetes"
+	pdconnector "github.com/ahlert/telvar/internal/connector/pagerduty"
 	"github.com/ahlert/telvar/internal/docs"
 	"github.com/ahlert/telvar/internal/scheduler"
 	"github.com/ahlert/telvar/internal/scorecard"
@@ -68,12 +70,12 @@ func serveCmd() *cobra.Command {
 
 			var wg sync.WaitGroup
 
-			if cfg.Connectors.GitHub != nil {
-				interval, parseErr := time.ParseDuration(cfg.Discovery.ScanInterval)
-				if parseErr != nil {
-					return fmt.Errorf("parsing scan_interval: %w", parseErr)
-				}
+			interval, parseErr := time.ParseDuration(cfg.Discovery.ScanInterval)
+			if parseErr != nil {
+				return fmt.Errorf("parsing scan_interval: %w", parseErr)
+			}
 
+			if cfg.Connectors.GitHub != nil {
 				client := ghconnector.NewClient(cfg.Connectors.GitHub)
 				scanner := ghconnector.NewScanner(client, db, &cfg.Discovery, scorecard.NewRunner(cfg.Scorecards))
 				sched := scheduler.New(scanner, interval)
@@ -82,6 +84,34 @@ func serveCmd() *cobra.Command {
 				go func() {
 					defer wg.Done()
 					sched.Start(ctx)
+				}()
+			}
+
+			if cfg.Connectors.Kubernetes != nil {
+				k8sClient, k8sErr := k8sconnector.NewClient(cfg.Connectors.Kubernetes)
+				if k8sErr != nil {
+					slog.Warn("k8s connector not available", "error", k8sErr)
+				} else {
+					k8sScanner := k8sconnector.NewScanner(k8sClient, db)
+					k8sSched := scheduler.New(k8sScanner, interval)
+
+					wg.Add(1)
+					go func() {
+						defer wg.Done()
+						k8sSched.Start(ctx)
+					}()
+				}
+			}
+
+			if cfg.Connectors.PagerDuty != nil {
+				pdClient := pdconnector.NewClient(cfg.Connectors.PagerDuty)
+				pdScanner := pdconnector.NewScanner(pdClient, db)
+				pdSched := scheduler.New(pdScanner, interval)
+
+				wg.Add(1)
+				go func() {
+					defer wg.Done()
+					pdSched.Start(ctx)
 				}()
 			}
 

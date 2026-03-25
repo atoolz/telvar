@@ -129,6 +129,11 @@ func inferOwner(files FileChecker) string {
 	return ""
 }
 
+// SlugFor generates a unique, deterministic ID for an entity name.
+func SlugFor(name string) string {
+	return uniqueSlug(name)
+}
+
 func uniqueSlug(name string) string {
 	slug := slugify(name)
 	h := sha256.Sum256([]byte(name))
