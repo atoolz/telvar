@@ -30,7 +30,7 @@ func newTestServer(t *testing.T) (*Server, *store.Store) {
 		t.Fatalf("fs.Sub static: %v", err)
 	}
 
-	srv, err := New(s, tmplFS, statFS)
+	srv, err := New(s, tmplFS, statFS, nil)
 	if err != nil {
 		t.Fatalf("web.New: %v", err)
 	}

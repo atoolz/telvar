@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ahlert/telvar/internal/catalog"
@@ -63,6 +64,27 @@ func migrate(db *sql.DB) error {
 	CREATE INDEX IF NOT EXISTS idx_entities_kind ON entities(kind);
 	CREATE INDEX IF NOT EXISTS idx_entities_owner ON entities(owner);
 	CREATE INDEX IF NOT EXISTS idx_entities_language ON entities(language);
+
+	CREATE VIRTUAL TABLE IF NOT EXISTS entities_fts USING fts5(
+		name,
+		description,
+		owner,
+		language,
+		content='entities',
+		content_rowid='rowid'
+	);
+
+	CREATE TRIGGER IF NOT EXISTS entities_ai AFTER INSERT ON entities BEGIN
+		INSERT INTO entities_fts(rowid, name, description, owner, language)
+		VALUES (new.rowid, new.name, new.description, new.owner, new.language);
+	END;
+
+	CREATE TRIGGER IF NOT EXISTS entities_au AFTER UPDATE ON entities BEGIN
+		INSERT INTO entities_fts(entities_fts, rowid, name, description, owner, language)
+		VALUES ('delete', old.rowid, old.name, old.description, old.owner, old.language);
+		INSERT INTO entities_fts(rowid, name, description, owner, language)
+		VALUES (new.rowid, new.name, new.description, new.owner, new.language);
+	END;
 
 	CREATE TABLE IF NOT EXISTS discovery_runs (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -221,6 +243,72 @@ func (s *Store) GetEntity(id string) (*catalog.Entity, error) {
 	}
 
 	return &e, nil
+}
+
+func (s *Store) SearchEntities(query string, limit int) (_ []catalog.Entity, err error) {
+	if query == "" {
+		return s.ListEntities("", limit)
+	}
+
+	escaped := strings.ReplaceAll(query, `"`, `""`)
+	ftsQuery := `"` + escaped + `"*`
+
+	sqlQuery := `
+		SELECT e.id, e.name, e.kind, e.description, e.owner, e.team, e.language, e.framework, e.repo_url, e.dependencies, e.tags, e.metadata, e.score_json, e.discovered_at, e.updated_at
+		FROM entities e
+		JOIN entities_fts f ON e.rowid = f.rowid
+		WHERE entities_fts MATCH ?
+		ORDER BY rank
+	`
+	var args []any
+	args = append(args, ftsQuery)
+
+	if limit > 0 {
+		sqlQuery += " LIMIT ?"
+		args = append(args, limit)
+	}
+
+	rows, err := s.db.Query(sqlQuery, args...)
+	if err != nil {
+		return nil, fmt.Errorf("searching entities: %w", err)
+	}
+	defer func() {
+		if cerr := rows.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
+
+	var entities []catalog.Entity
+	for rows.Next() {
+		var e catalog.Entity
+		var deps, tags, meta string
+		var scoreJSON *string
+
+		if scanErr := rows.Scan(&e.ID, &e.Name, &e.Kind, &e.Description, &e.Owner, &e.Team, &e.Language, &e.Framework, &e.RepoURL, &deps, &tags, &meta, &scoreJSON, &e.DiscoveredAt, &e.UpdatedAt); scanErr != nil {
+			return nil, fmt.Errorf("scanning search result: %w", scanErr)
+		}
+
+		if parseErr := json.Unmarshal([]byte(deps), &e.Dependencies); parseErr != nil {
+			return nil, fmt.Errorf("parsing dependencies for %s: %w", e.ID, parseErr)
+		}
+		if parseErr := json.Unmarshal([]byte(tags), &e.Tags); parseErr != nil {
+			return nil, fmt.Errorf("parsing tags for %s: %w", e.ID, parseErr)
+		}
+		if parseErr := json.Unmarshal([]byte(meta), &e.Metadata); parseErr != nil {
+			return nil, fmt.Errorf("parsing metadata for %s: %w", e.ID, parseErr)
+		}
+		if scoreJSON != nil {
+			var score catalog.ScoreResult
+			if parseErr := json.Unmarshal([]byte(*scoreJSON), &score); parseErr != nil {
+				return nil, fmt.Errorf("parsing score for %s: %w", e.ID, parseErr)
+			}
+			e.Score = &score
+		}
+
+		entities = append(entities, e)
+	}
+
+	return entities, rows.Err()
 }
 
 func (s *Store) CountEntities() (int, error) {
