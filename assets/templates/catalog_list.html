@@ -1,0 +1,45 @@
+{{define "title"}}Services - Telvar{{end}}
+
+{{define "content"}}
+<div class="page-header">
+  <h1>Services</h1>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">{{.TotalCount}}</div>
+      <div class="stat-label">Services</div>
+    </div>
+  </div>
+</div>
+
+<form class="filters"
+      hx-get="/htmx/catalog/list"
+      hx-target="#entity-grid"
+      hx-trigger="input changed delay:300ms from:#search-input, change from:.filter-select"
+      hx-indicator="#loading">
+  <input type="text" id="search-input" name="q" placeholder="Search services..." value="{{.Query}}" autocomplete="off">
+  <select name="kind" class="filter-select">
+    <option value="">All kinds</option>
+    <option value="component" {{if eq .Kind "component"}}selected{{end}}>Component</option>
+    <option value="api" {{if eq .Kind "api"}}selected{{end}}>API</option>
+    <option value="resource" {{if eq .Kind "resource"}}selected{{end}}>Resource</option>
+  </select>
+  <select name="lang" class="filter-select">
+    <option value="">All languages</option>
+    {{range .Languages}}
+    <option value="{{.}}" {{if eq . $.Lang}}selected{{end}}>{{.}}</option>
+    {{end}}
+  </select>
+  <span id="loading" class="htmx-indicator" style="color: var(--text-muted); font-size: 0.85rem;">Loading...</span>
+</form>
+
+<div id="entity-grid" class="entity-grid">
+  {{template "entity_cards" .Entities}}
+</div>
+
+{{if eq (len .Entities) 0}}
+<div class="empty-state">
+  <h2>No services found</h2>
+  <p>Run <code>telvar discover</code> to populate the catalog.</p>
+</div>
+{{end}}
+{{end}}

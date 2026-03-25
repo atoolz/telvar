@@ -1,0 +1,93 @@
+{{define "title"}}{{.Entity.Name}} - Telvar{{end}}
+
+{{define "content"}}
+<div class="breadcrumb">
+  <a href="/">Services</a> / {{.Entity.Name}}
+</div>
+
+<div class="detail-header">
+  <h1>{{.Entity.Name}}</h1>
+  {{if .Entity.Description}}<p class="description">{{.Entity.Description}}</p>{{end}}
+  <div class="meta" style="margin-top: 0.75rem;">
+    <span class="badge badge-kind">{{.Entity.Kind}}</span>
+    {{if .Entity.Language}}<span class="badge badge-lang">{{.Entity.Language}}</span>{{end}}
+    {{if .Entity.Framework}}<span class="badge badge-lang">{{.Entity.Framework}}</span>{{end}}
+    {{if .Entity.Owner}}<span class="badge badge-owner">{{.Entity.Owner}}</span>{{end}}
+  </div>
+</div>
+
+{{if .Entity.Score}}
+<div class="detail-section">
+  <h2>Scorecard</h2>
+  <div class="score-gauge" style="margin-bottom: 1rem;">
+    <div class="score-bar" style="width: 120px;">
+      <div class="score-fill {{if ge .Entity.Score.Percent 70}}high{{else if ge .Entity.Score.Percent 40}}medium{{else}}low{{end}}"
+           style="width: {{.Entity.Score.Percent}}%"></div>
+    </div>
+    <span class="score-text">{{.Entity.Score.Percent}}%</span>
+    <span style="color: var(--text-muted); font-size: 0.85rem;">({{.Entity.Score.Total}}/{{.Entity.Score.MaxTotal}})</span>
+  </div>
+  {{if .Entity.Score.Rules}}
+  <table class="score-rules">
+    <thead><tr><th>Rule</th><th>Status</th><th>Weight</th><th>Detail</th></tr></thead>
+    <tbody>
+    {{range .Entity.Score.Rules}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td>{{if .Passed}}<span class="pass">PASS</span>{{else}}<span class="fail">FAIL</span>{{end}}</td>
+      <td>{{.Weight}}</td>
+      <td style="color: var(--text-muted);">{{.Detail}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+  </table>
+  {{end}}
+</div>
+{{end}}
+
+<div class="detail-section">
+  <h2>Overview</h2>
+  <dl class="detail-grid">
+    {{if .Entity.RepoURL}}<dt>Repository</dt><dd><a href="{{.Entity.RepoURL | safeURL}}" target="_blank" rel="noopener noreferrer">{{.Entity.RepoURL}}</a></dd>{{end}}
+    {{if .Entity.Language}}<dt>Language</dt><dd>{{.Entity.Language}}</dd>{{end}}
+    {{if .Entity.Framework}}<dt>Framework</dt><dd>{{.Entity.Framework}}</dd>{{end}}
+    {{if .Entity.Owner}}<dt>Owner</dt><dd>{{.Entity.Owner}}</dd>{{end}}
+    {{if .Entity.Team}}<dt>Team</dt><dd>{{.Entity.Team}}</dd>{{end}}
+    <dt>Discovered</dt><dd>{{.Entity.DiscoveredAt.Format "2006-01-02 15:04 UTC"}}</dd>
+    <dt>Updated</dt><dd>{{.Entity.UpdatedAt.Format "2006-01-02 15:04 UTC"}}</dd>
+  </dl>
+</div>
+
+{{if .Entity.Dependencies}}
+<div class="detail-section">
+  <h2>Dependencies ({{len .Entity.Dependencies}})</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+    {{range .Entity.Dependencies}}
+    <span class="badge badge-lang">{{.}}</span>
+    {{end}}
+  </div>
+</div>
+{{end}}
+
+{{if .Entity.Tags}}
+<div class="detail-section">
+  <h2>Tags</h2>
+  <dl class="detail-grid">
+    {{range $k, $v := .Entity.Tags}}
+    <dt>{{$k}}</dt><dd>{{$v}}</dd>
+    {{end}}
+  </dl>
+</div>
+{{end}}
+
+{{if .Entity.Metadata}}
+<div class="detail-section">
+  <h2>Metadata</h2>
+  <dl class="detail-grid">
+    {{range $k, $v := .Entity.Metadata}}
+    <dt>{{$k}}</dt><dd>{{$v}}</dd>
+    {{end}}
+  </dl>
+</div>
+{{end}}
+{{end}}

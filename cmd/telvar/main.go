@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"log/slog"
 	"os"
 
+	"github.com/ahlert/telvar/assets"
 	"github.com/ahlert/telvar/internal/config"
 	ghconnector "github.com/ahlert/telvar/internal/connector/github"
 	"github.com/ahlert/telvar/internal/store"
+	"github.com/ahlert/telvar/internal/web"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +35,10 @@ func main() {
 }
 
 func serveCmd() *cobra.Command {
-	var cfgPath string
+	var (
+		cfgPath string
+		dbPath  string
+	)
 
 	cmd := &cobra.Command{
 		Use:   "serve",
@@ -43,13 +49,33 @@ func serveCmd() *cobra.Command {
 				return fmt.Errorf("loading config: %w", err)
 			}
 
-			fmt.Printf("Telvar %s starting on :%d\n", version, cfg.Server.Port)
-			// TODO: wire up server
-			return nil
+			db, err := store.New(dbPath)
+			if err != nil {
+				return fmt.Errorf("opening database: %w", err)
+			}
+			defer db.Close()
+
+			tmplFS, err := fs.Sub(assets.Templates, "templates")
+			if err != nil {
+				return fmt.Errorf("accessing embedded templates: %w", err)
+			}
+			statFS, err := fs.Sub(assets.Static, "static")
+			if err != nil {
+				return fmt.Errorf("accessing embedded static files: %w", err)
+			}
+			srv, err := web.New(db, tmplFS, statFS)
+			if err != nil {
+				return fmt.Errorf("creating web server: %w", err)
+			}
+
+			addr := fmt.Sprintf(":%d", cfg.Server.Port)
+			slog.Info("Telvar starting", "version", version, "addr", addr)
+			return srv.ListenAndServe(addr)
 		},
 	}
 
 	cmd.Flags().StringVarP(&cfgPath, "config", "c", "telvar.yaml", "path to config file")
+	cmd.Flags().StringVarP(&dbPath, "db", "d", "telvar.db", "path to SQLite database")
 	return cmd
 }
 
