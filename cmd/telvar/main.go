@@ -14,6 +14,7 @@ import (
 	"github.com/ahlert/telvar/internal/config"
 	ghconnector "github.com/ahlert/telvar/internal/connector/github"
 	"github.com/ahlert/telvar/internal/scheduler"
+	"github.com/ahlert/telvar/internal/scorecard"
 	"github.com/ahlert/telvar/internal/store"
 	"github.com/ahlert/telvar/internal/web"
 	"github.com/spf13/cobra"
@@ -73,7 +74,7 @@ func serveCmd() *cobra.Command {
 				}
 
 				client := ghconnector.NewClient(cfg.Connectors.GitHub)
-				scanner := ghconnector.NewScanner(client, db, &cfg.Discovery)
+				scanner := ghconnector.NewScanner(client, db, &cfg.Discovery, scorecard.NewRunner(cfg.Scorecards))
 				sched := scheduler.New(scanner, interval)
 
 				wg.Add(1)
@@ -98,7 +99,7 @@ func serveCmd() *cobra.Command {
 
 			addr := fmt.Sprintf(":%d", cfg.Server.Port)
 			slog.Info("Telvar starting", "version", version, "addr", addr)
-			serveErr := srv.ListenAndServe(addr)
+			serveErr := srv.ListenAndServe(ctx, addr)
 			stop()
 			wg.Wait()
 			return serveErr
@@ -136,7 +137,7 @@ func discoverCmd() *cobra.Command {
 			}
 
 			client := ghconnector.NewClient(cfg.Connectors.GitHub)
-			scanner := ghconnector.NewScanner(client, db, &cfg.Discovery)
+			scanner := ghconnector.NewScanner(client, db, &cfg.Discovery, scorecard.NewRunner(cfg.Scorecards))
 
 			slog.Info("starting discovery", "source", "github", "org", cfg.Connectors.GitHub.Org)
 			if err := scanner.Run(cmd.Context()); err != nil {

@@ -12,20 +12,23 @@ import (
 
 	"github.com/ahlert/telvar/internal/catalog"
 	"github.com/ahlert/telvar/internal/config"
+	"github.com/ahlert/telvar/internal/scorecard"
 	"github.com/ahlert/telvar/internal/store"
 )
 
 type Scanner struct {
-	client *Client
-	store  *store.Store
-	cfg    *config.DiscoveryConfig
+	client   *Client
+	store    *store.Store
+	cfg      *config.DiscoveryConfig
+	scorer   *scorecard.Runner
 }
 
-func NewScanner(client *Client, store *store.Store, cfg *config.DiscoveryConfig) *Scanner {
+func NewScanner(client *Client, store *store.Store, cfg *config.DiscoveryConfig, scorer *scorecard.Runner) *Scanner {
 	return &Scanner{
 		client: client,
 		store:  store,
 		cfg:    cfg,
+		scorer: scorer,
 	}
 }
 
@@ -130,6 +133,10 @@ func (s *Scanner) processRepo(ctx context.Context, repo Repo) error {
 	entity.Metadata["github_stars"] = strconv.Itoa(repo.StarCount)
 	entity.Metadata["github_pushed_at"] = repo.PushedAt.Format(time.RFC3339)
 	entity.Metadata["default_branch"] = repo.DefaultBranch
+
+	if s.scorer != nil {
+		entity.Score = s.scorer.Score(&entity, fc)
+	}
 
 	if err := s.store.UpsertEntity(&entity); err != nil {
 		return fmt.Errorf("storing entity %s: %w", entity.Name, err)
