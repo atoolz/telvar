@@ -39,7 +39,7 @@ func (s *Scanner) Run(ctx context.Context) error {
 
 	repos, err := s.client.ListRepos(ctx)
 	if err != nil {
-		if finErr := s.store.FinishDiscoveryRun(runID, 0, "failed"); finErr != nil {
+		if finErr := s.store.FinishDiscoveryRun(runID, 0, store.RunStatusFailed); finErr != nil {
 			slog.Warn("failed to mark discovery run as failed", "error", finErr)
 		}
 		return fmt.Errorf("listing repos: %w", err)
@@ -93,9 +93,9 @@ dispatch:
 
 	wg.Wait()
 
-	status := "ok"
+	status := store.RunStatusOK
 	if cancelled {
-		status = "cancelled"
+		status = store.RunStatusCancelled
 	}
 	if err := s.store.FinishDiscoveryRun(runID, count, status); err != nil {
 		return fmt.Errorf("finishing discovery run: %w", err)
