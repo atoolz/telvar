@@ -311,6 +311,95 @@ func (s *Store) SearchEntities(query string, limit int) (_ []catalog.Entity, err
 	return entities, rows.Err()
 }
 
+type TeamSummary struct {
+	Owner       string
+	EntityCount int
+	AvgScore    int
+}
+
+func (s *Store) ListTeams() (_ []TeamSummary, err error) {
+	rows, err := s.db.Query(`
+		SELECT owner, COUNT(*) as cnt,
+			COALESCE(AVG(CASE WHEN score_json IS NOT NULL
+				THEN json_extract(score_json, '$.percent')
+				ELSE NULL END), 0) as avg_score
+		FROM entities
+		WHERE owner != ''
+		GROUP BY owner
+		ORDER BY cnt DESC
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("listing teams: %w", err)
+	}
+	defer func() {
+		if cerr := rows.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
+
+	var teams []TeamSummary
+	for rows.Next() {
+		var t TeamSummary
+		if err := rows.Scan(&t.Owner, &t.EntityCount, &t.AvgScore); err != nil {
+			return nil, fmt.Errorf("scanning team: %w", err)
+		}
+		teams = append(teams, t)
+	}
+	return teams, rows.Err()
+}
+
+func (s *Store) ListEntitiesByOwner(owner string) ([]catalog.Entity, error) {
+	return s.listEntitiesWhere("owner = ?", owner)
+}
+
+// listEntitiesWhere queries entities with a WHERE clause. The `where` parameter
+// MUST be a hardcoded parameterized fragment (e.g., "owner = ?"). Never pass
+// user input directly into `where`; use `args` for user-provided values.
+func (s *Store) listEntitiesWhere(where string, args ...any) (_ []catalog.Entity, err error) {
+	query := "SELECT id, name, kind, description, owner, team, language, framework, repo_url, dependencies, tags, metadata, score_json, discovered_at, updated_at FROM entities WHERE " + where + " ORDER BY name ASC"
+
+	rows, err := s.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if cerr := rows.Close(); cerr != nil && err == nil {
+			err = cerr
+		}
+	}()
+
+	var entities []catalog.Entity
+	for rows.Next() {
+		var e catalog.Entity
+		var deps, tags, meta string
+		var scoreJSON *string
+
+		if err := rows.Scan(&e.ID, &e.Name, &e.Kind, &e.Description, &e.Owner, &e.Team, &e.Language, &e.Framework, &e.RepoURL, &deps, &tags, &meta, &scoreJSON, &e.DiscoveredAt, &e.UpdatedAt); err != nil {
+			return nil, fmt.Errorf("scanning entity: %w", err)
+		}
+
+		if err := json.Unmarshal([]byte(deps), &e.Dependencies); err != nil {
+			return nil, fmt.Errorf("parsing dependencies for %s: %w", e.ID, err)
+		}
+		if err := json.Unmarshal([]byte(tags), &e.Tags); err != nil {
+			return nil, fmt.Errorf("parsing tags for %s: %w", e.ID, err)
+		}
+		if err := json.Unmarshal([]byte(meta), &e.Metadata); err != nil {
+			return nil, fmt.Errorf("parsing metadata for %s: %w", e.ID, err)
+		}
+		if scoreJSON != nil {
+			var score catalog.ScoreResult
+			if err := json.Unmarshal([]byte(*scoreJSON), &score); err != nil {
+				return nil, fmt.Errorf("parsing score for %s: %w", e.ID, err)
+			}
+			e.Score = &score
+		}
+
+		entities = append(entities, e)
+	}
+	return entities, rows.Err()
+}
+
 func (s *Store) CountEntities() (int, error) {
 	var count int
 	err := s.db.QueryRow("SELECT COUNT(*) FROM entities").Scan(&count)

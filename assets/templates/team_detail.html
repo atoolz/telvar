@@ -1,0 +1,39 @@
+{{define "title"}}{{.TeamName}} - Telvar{{end}}
+
+{{define "content"}}
+<div class="breadcrumb">
+  <a href="/teams">Teams</a> / {{.TeamName}}
+</div>
+
+<div class="page-header">
+  <h1>{{.TeamName}}</h1>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">{{len .Entities}}</div>
+      <div class="stat-label">Services</div>
+    </div>
+    {{if gt .AvgScore 0}}
+    <div class="stat">
+      <div class="stat-value">{{.AvgScore}}%</div>
+      <div class="stat-label">Avg Score</div>
+    </div>
+    {{end}}
+    {{if .OnCallName}}
+    <div class="stat">
+      <div class="stat-value" style="font-size: 1rem;">{{.OnCallName}}</div>
+      <div class="stat-label">On-Call</div>
+    </div>
+    {{end}}
+  </div>
+</div>
+
+<div id="entity-grid" class="entity-grid">
+  {{template "entity_cards" .Entities}}
+</div>
+
+{{if eq (len .Entities) 0}}
+<div class="empty-state">
+  <h2>No services owned by {{.TeamName}}</h2>
+</div>
+{{end}}
+{{end}}

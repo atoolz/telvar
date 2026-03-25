@@ -37,6 +37,8 @@ func New(s *store.Store, tmplFS fs.FS, statFS fs.FS, docsFetcher *docs.Fetcher) 
 		"catalog_list":  {"layout.html", "catalog_list.html", "entity_cards.html"},
 		"entity_detail": {"layout.html", "entity_detail.html"},
 		"entity_docs":   {"layout.html", "entity_docs.html"},
+		"teams_list":    {"layout.html", "teams_list.html"},
+		"team_detail":   {"layout.html", "team_detail.html", "entity_cards.html"},
 	}
 
 	templates := make(map[string]*template.Template)
@@ -96,6 +98,8 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /", s.handleCatalogList)
 	s.mux.HandleFunc("GET /entity/{id}", s.handleEntityDetail)
 	s.mux.HandleFunc("GET /entity/{id}/docs", s.handleEntityDocs)
+	s.mux.HandleFunc("GET /teams", s.handleTeamsList)
+	s.mux.HandleFunc("GET /teams/{team}", s.handleTeamDetail)
 	s.mux.HandleFunc("GET /htmx/catalog/list", s.handleCatalogListPartial)
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 }
