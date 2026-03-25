@@ -30,6 +30,8 @@ func InferEntity(name string, repoURL string, files FileChecker) Entity {
 		e.Owner = owner
 	}
 
+	e.Dependencies = inferDependencies(files, e.Language)
+
 	return e
 }
 

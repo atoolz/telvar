@@ -14,6 +14,7 @@ import (
 	"github.com/ahlert/telvar/internal/config"
 	"github.com/ahlert/telvar/internal/scorecard"
 	"github.com/ahlert/telvar/internal/store"
+	"github.com/ahlert/telvar/internal/vuln"
 )
 
 type Scanner struct {
@@ -21,11 +22,13 @@ type Scanner struct {
 	store    *store.Store
 	cfg      *config.DiscoveryConfig
 	scorer   *scorecard.Runner
+	vulnChk  *vuln.Checker
 }
 
 func NewScanner(client *Client, store *store.Store, cfg *config.DiscoveryConfig, scorer *scorecard.Runner) *Scanner {
 	return &Scanner{
-		client: client,
+		client:  client,
+		vulnChk: vuln.NewChecker(),
 		store:  store,
 		cfg:    cfg,
 		scorer: scorer,
@@ -133,6 +136,10 @@ func (s *Scanner) processRepo(ctx context.Context, repo Repo) error {
 	entity.Metadata["github_stars"] = strconv.Itoa(repo.StarCount)
 	entity.Metadata["github_pushed_at"] = repo.PushedAt.Format(time.RFC3339)
 	entity.Metadata["default_branch"] = repo.DefaultBranch
+
+	if s.vulnChk != nil {
+		s.vulnChk.AnnotateEntity(ctx, &entity)
+	}
 
 	if s.scorer != nil {
 		entity.Score = s.scorer.Score(&entity, fc)
