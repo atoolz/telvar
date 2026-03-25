@@ -228,3 +228,22 @@ func (s *Store) CountEntities() (int, error) {
 	err := s.db.QueryRow("SELECT COUNT(*) FROM entities").Scan(&count)
 	return count, err
 }
+
+func (s *Store) StartDiscoveryRun(source string) (int64, error) {
+	result, err := s.db.Exec(
+		"INSERT INTO discovery_runs (source, started_at, status) VALUES (?, ?, ?)",
+		source, time.Now().UTC(), "running",
+	)
+	if err != nil {
+		return 0, fmt.Errorf("inserting discovery run: %w", err)
+	}
+	return result.LastInsertId()
+}
+
+func (s *Store) FinishDiscoveryRun(id int64, entitiesFound int, status string) error {
+	_, err := s.db.Exec(
+		"UPDATE discovery_runs SET finished_at = ?, entities_found = ?, status = ? WHERE id = ?",
+		time.Now().UTC(), entitiesFound, status, id,
+	)
+	return err
+}
