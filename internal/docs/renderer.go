@@ -20,6 +20,12 @@ var md = goldmark.New(
 	),
 )
 
+// RenderMarkdown converts Markdown to safe HTML. Raw HTML in the source is
+// stripped by goldmark's default behavior (no html.WithUnsafe). The result is
+// cast to template.HTML to bypass Go's auto-escaping. DO NOT enable
+// html.WithUnsafe without adding an HTML sanitizer (e.g., bluemonday)
+// between goldmark output and the template.HTML cast. README content comes
+// from third-party repos and must be treated as untrusted.
 func RenderMarkdown(raw []byte) (template.HTML, error) {
 	var buf bytes.Buffer
 	if err := md.Convert(raw, &buf); err != nil {

@@ -220,9 +220,11 @@ func sanitizePathValue(s string) string {
 	return b.String()
 }
 
+const maxEntitiesPerPage = 500
+
 func (s *Server) searchEntities(q, kind, lang string) ([]catalog.Entity, error) {
 	if q != "" {
-		entities, err := s.store.SearchEntities(q, 0)
+		entities, err := s.store.SearchEntities(q, maxEntitiesPerPage)
 		if err != nil {
 			return nil, err
 		}
@@ -244,7 +246,7 @@ func (s *Server) searchEntities(q, kind, lang string) ([]catalog.Entity, error) 
 		return filtered, nil
 	}
 
-	entities, err := s.store.ListEntities(kind, 0)
+	entities, err := s.store.ListEntities(kind, maxEntitiesPerPage)
 	if err != nil {
 		return nil, err
 	}

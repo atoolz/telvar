@@ -180,6 +180,10 @@ func (c *Client) get(ctx context.Context, url string) ([]byte, http.Header, erro
 	return body, resp.Header, nil
 }
 
+// handleRateLimit sleeps when GitHub rate limit is low. Uses a shared rateReset
+// timestamp to avoid all goroutines independently computing the same wait.
+// Concurrent goroutines may sleep slightly different durations due to lock
+// release before sleep, but all goroutines will wait past the reset window.
 func (c *Client) handleRateLimit(ctx context.Context, h http.Header) {
 	remaining := h.Get("X-RateLimit-Remaining")
 	if remaining == "" {
