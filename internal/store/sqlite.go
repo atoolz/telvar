@@ -241,9 +241,53 @@ func (s *Store) StartDiscoveryRun(source string) (int64, error) {
 }
 
 func (s *Store) FinishDiscoveryRun(id int64, entitiesFound int, status string) error {
-	_, err := s.db.Exec(
+	result, err := s.db.Exec(
 		"UPDATE discovery_runs SET finished_at = ?, entities_found = ?, status = ? WHERE id = ?",
 		time.Now().UTC(), entitiesFound, status, id,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+	if n, _ := result.RowsAffected(); n == 0 {
+		return fmt.Errorf("discovery run %d not found", id)
+	}
+	return nil
+}
+
+const (
+	RunStatusRunning   = "running"
+	RunStatusOK        = "ok"
+	RunStatusFailed    = "failed"
+	RunStatusCancelled = "cancelled"
+)
+
+type DiscoveryRun struct {
+	ID            int64
+	Source        string
+	StartedAt     time.Time
+	FinishedAt    *time.Time
+	EntitiesFound int
+	Status        string
+}
+
+func (s *Store) LatestDiscoveryRun() (*DiscoveryRun, error) {
+	var r DiscoveryRun
+	var finishedAt sql.NullTime
+
+	err := s.db.QueryRow(`
+		SELECT id, source, started_at, finished_at, entities_found, status
+		FROM discovery_runs ORDER BY id DESC LIMIT 1
+	`).Scan(&r.ID, &r.Source, &r.StartedAt, &finishedAt, &r.EntitiesFound, &r.Status)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if finishedAt.Valid {
+		r.FinishedAt = &finishedAt.Time
+	}
+	return &r, nil
 }

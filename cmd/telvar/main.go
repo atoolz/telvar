@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"log/slog"
 	"os"
+	"os/signal"
+	"sync"
+	"time"
 
 	"github.com/ahlert/telvar/assets"
 	"github.com/ahlert/telvar/internal/config"
 	ghconnector "github.com/ahlert/telvar/internal/connector/github"
+	"github.com/ahlert/telvar/internal/scheduler"
 	"github.com/ahlert/telvar/internal/store"
 	"github.com/ahlert/telvar/internal/web"
 	"github.com/spf13/cobra"
@@ -26,6 +31,7 @@ func main() {
 
 	root.AddCommand(serveCmd())
 	root.AddCommand(discoverCmd())
+	root.AddCommand(statusCmd())
 	root.AddCommand(configCmd())
 
 	if err := root.Execute(); err != nil {
@@ -55,6 +61,28 @@ func serveCmd() *cobra.Command {
 			}
 			defer db.Close()
 
+			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+			defer stop()
+
+			var wg sync.WaitGroup
+
+			if cfg.Connectors.GitHub != nil {
+				interval, parseErr := time.ParseDuration(cfg.Discovery.ScanInterval)
+				if parseErr != nil {
+					return fmt.Errorf("parsing scan_interval: %w", parseErr)
+				}
+
+				client := ghconnector.NewClient(cfg.Connectors.GitHub)
+				scanner := ghconnector.NewScanner(client, db, &cfg.Discovery)
+				sched := scheduler.New(scanner, interval)
+
+				wg.Add(1)
+				go func() {
+					defer wg.Done()
+					sched.Start(ctx)
+				}()
+			}
+
 			tmplFS, err := fs.Sub(assets.Templates, "templates")
 			if err != nil {
 				return fmt.Errorf("accessing embedded templates: %w", err)
@@ -70,7 +98,10 @@ func serveCmd() *cobra.Command {
 
 			addr := fmt.Sprintf(":%d", cfg.Server.Port)
 			slog.Info("Telvar starting", "version", version, "addr", addr)
-			return srv.ListenAndServe(addr)
+			serveErr := srv.ListenAndServe(addr)
+			stop()
+			wg.Wait()
+			return serveErr
 		},
 	}
 
@@ -117,6 +148,54 @@ func discoverCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&cfgPath, "config", "c", "telvar.yaml", "path to config file")
+	cmd.Flags().StringVarP(&dbPath, "db", "d", "telvar.db", "path to SQLite database")
+	return cmd
+}
+
+func statusCmd() *cobra.Command {
+	var dbPath string
+
+	cmd := &cobra.Command{
+		Use:   "status",
+		Short: "Show catalog and discovery status",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			db, err := store.New(dbPath)
+			if err != nil {
+				return fmt.Errorf("opening database: %w", err)
+			}
+			defer db.Close()
+
+			count, err := db.CountEntities()
+			if err != nil {
+				return fmt.Errorf("counting entities: %w", err)
+			}
+
+			fmt.Printf("Entities: %d\n", count)
+
+			run, err := db.LatestDiscoveryRun()
+			if err != nil {
+				return fmt.Errorf("fetching latest run: %w", err)
+			}
+
+			if run == nil {
+				fmt.Println("Last discovery: never")
+				return nil
+			}
+
+			fmt.Printf("Last discovery:\n")
+			fmt.Printf("  Source:   %s\n", run.Source)
+			fmt.Printf("  Status:   %s\n", run.Status)
+			fmt.Printf("  Started:  %s\n", run.StartedAt.Format("2006-01-02 15:04:05 UTC"))
+			if run.FinishedAt != nil {
+				fmt.Printf("  Finished: %s\n", run.FinishedAt.Format("2006-01-02 15:04:05 UTC"))
+				fmt.Printf("  Duration: %s\n", run.FinishedAt.Sub(run.StartedAt).Round(time.Millisecond))
+			}
+			fmt.Printf("  Entities: %d\n", run.EntitiesFound)
+
+			return nil
+		},
+	}
+
 	cmd.Flags().StringVarP(&dbPath, "db", "d", "telvar.db", "path to SQLite database")
 	return cmd
 }
