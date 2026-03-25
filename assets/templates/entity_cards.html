@@ -1,0 +1,22 @@
+{{define "entity_cards"}}
+{{range .}}
+<a href="/entity/{{.ID}}" class="entity-card">
+  <div class="name">{{.Name}}</div>
+  {{if .Description}}<div class="description">{{.Description}}</div>{{end}}
+  <div class="meta">
+    <span class="badge badge-kind">{{.Kind}}</span>
+    {{if .Language}}<span class="badge badge-lang">{{.Language}}</span>{{end}}
+    {{if .Owner}}<span class="badge badge-owner">{{.Owner}}</span>{{end}}
+  </div>
+  {{if .Score}}
+  <div class="score-gauge">
+    <div class="score-bar">
+      <div class="score-fill {{if ge .Score.Percent 70}}high{{else if ge .Score.Percent 40}}medium{{else}}low{{end}}"
+           style="width: {{.Score.Percent}}%"></div>
+    </div>
+    <span class="score-text">{{.Score.Percent}}%</span>
+  </div>
+  {{end}}
+</a>
+{{end}}
+{{end}}
