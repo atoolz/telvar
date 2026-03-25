@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/ahlert/telvar/assets"
@@ -65,7 +66,7 @@ func serveCmd() *cobra.Command {
 			}
 			defer db.Close()
 
-			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 			defer stop()
 
 			var wg sync.WaitGroup

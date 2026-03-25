@@ -153,6 +153,10 @@ func (s *Scanner) processRepo(ctx context.Context, repo Repo) error {
 }
 
 func (s *Scanner) filterRepos(repos []Repo) []Repo {
+	if s.cfg.RepoFilter != "" {
+		slog.Warn("repo_filter is configured but not yet implemented, ignoring", "filter", s.cfg.RepoFilter)
+	}
+
 	var filtered []Repo
 	for _, r := range repos {
 		if s.cfg.IgnoreArchived && r.Archived {

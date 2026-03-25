@@ -19,7 +19,7 @@
 {{else}}
 <div class="entity-grid">
   {{range .Teams}}
-  <a href="/teams/{{.Owner | urlquery}}" class="entity-card">
+  <a href="/teams/{{.Owner}}" class="entity-card">
     <div class="name">{{.Owner}}</div>
     <div class="meta">
       <span class="badge badge-kind">{{.EntityCount}} services</span>
