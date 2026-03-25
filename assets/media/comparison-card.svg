@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#818cf8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <text x="600" y="70" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="18" fill="#818cf8" letter-spacing="4">WHY NOT BACKSTAGE?</text>
+  <text x="600" y="115" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="38" font-weight="700" fill="white">90% of adopters stall at 10% usage</text>
+  <text x="600" y="150" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="rgba(255,255,255,0.4)">Spotify's own data. Here's why.</text>
+
+  <!-- Comparison table -->
+  <!-- Headers -->
+  <rect x="100" y="185" width="400" height="40" rx="8" fill="rgba(255,255,255,0.04)"/>
+  <text x="300" y="210" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.5)">Backstage</text>
+  <rect x="520" y="185" width="120" height="40" rx="8" fill="rgba(255,255,255,0.02)"/>
+  <rect x="660" y="185" width="400" height="40" rx="8" fill="rgba(99,102,241,0.1)"/>
+  <text x="860" y="210" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" font-weight="600" fill="#818cf8">Telvar</text>
+
+  <!-- Row 1: Time to value -->
+  <text x="580" y="260" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Time to value</text>
+  <text x="300" y="260" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="#ef4444">3-6 months</text>
+  <text x="860" y="260" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="#22c55e">5 minutes</text>
+
+  <!-- Row 2: Team needed -->
+  <text x="580" y="310" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Team needed</text>
+  <text x="300" y="310" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="#ef4444">2-5 platform engineers</text>
+  <text x="860" y="310" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="#22c55e">0 (config file)</text>
+
+  <!-- Row 3: Cost -->
+  <text x="580" y="360" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Annual cost (200 devs)</text>
+  <text x="300" y="360" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="#ef4444">~$150k eng time</text>
+  <text x="860" y="360" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="#22c55e">$0</text>
+
+  <!-- Row 4: Deployment -->
+  <text x="580" y="410" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Deployment</text>
+  <text x="300" y="410" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="#ef4444">K8s + PostgreSQL + Node.js</text>
+  <text x="860" y="410" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="#22c55e">Single binary</text>
+
+  <!-- Row 5: Data entry -->
+  <text x="580" y="460" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Data entry</text>
+  <text x="300" y="460" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" fill="#ef4444">YAML per repo (manual)</text>
+  <text x="860" y="460" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="#22c55e">Full auto-discovery</text>
+
+  <!-- Separator lines -->
+  <line x1="100" y1="230" x2="1100" y2="230" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="100" y1="280" x2="1100" y2="280" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="100" y1="330" x2="1100" y2="330" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="100" y1="380" x2="1100" y2="380" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="100" y1="430" x2="1100" y2="430" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- CTA -->
+  <g transform="translate(470, 510)">
+    <rect width="260" height="44" rx="22" fill="url(#accent)"/>
+    <text x="130" y="28" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="15" font-weight="600" fill="white">github.com/atoolz/telvar</text>
+  </g>
+
+  <!-- Bottom accent -->
+  <rect x="0" y="626" width="1200" height="4" fill="url(#accent)"/>
+</svg>
