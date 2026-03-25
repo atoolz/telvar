@@ -5,8 +5,10 @@ import (
 	"log/slog"
 	"net/http"
 	"sort"
+	"strings"
 
 	"github.com/ahlert/telvar/internal/catalog"
+	"github.com/ahlert/telvar/internal/store"
 )
 
 type catalogListData struct {
@@ -131,9 +133,92 @@ func (s *Server) handleEntityDocs(w http.ResponseWriter, r *http.Request) {
 	s.render(w, "entity_docs", data)
 }
 
+type teamsListData struct {
+	CurrentPath string
+	Teams       []store.TeamSummary
+}
+
+type teamDetailData struct {
+	CurrentPath string
+	TeamName    string
+	Entities    []catalog.Entity
+	AvgScore    int
+	OnCallName  string
+}
+
+func (s *Server) handleTeamsList(w http.ResponseWriter, r *http.Request) {
+	teams, err := s.store.ListTeams()
+	if err != nil {
+		slog.Error("listing teams", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	s.render(w, "teams_list", teamsListData{
+		CurrentPath: "/teams",
+		Teams:       teams,
+	})
+}
+
+func (s *Server) handleTeamDetail(w http.ResponseWriter, r *http.Request) {
+	raw := r.PathValue("team")
+	teamName := sanitizePathValue(raw)
+	if teamName != raw {
+		http.NotFound(w, r)
+		return
+	}
+
+	entities, err := s.store.ListEntitiesByOwner(teamName)
+	if err != nil {
+		slog.Error("listing entities by owner", "team", teamName, "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	if len(entities) == 0 {
+		http.NotFound(w, r)
+		return
+	}
+
+	avgScore := 0
+	scored := 0
+	oncallName := ""
+	for _, e := range entities {
+		if e.Score != nil {
+			avgScore += e.Score.Percent
+			scored++
+		}
+		if name, ok := e.Metadata["pagerduty.oncall_name"]; ok && oncallName == "" {
+			oncallName = name
+		}
+	}
+	if scored > 0 {
+		avgScore = avgScore / scored
+	}
+
+	s.render(w, "team_detail", teamDetailData{
+		CurrentPath: "/teams/" + teamName,
+		TeamName:    teamName,
+		Entities:    entities,
+		AvgScore:    avgScore,
+		OnCallName:  oncallName,
+	})
+}
+
 func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(`{"ok":true}`))
+}
+
+func sanitizePathValue(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '-', r == '_', r == '.':
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 func (s *Server) searchEntities(q, kind, lang string) ([]catalog.Entity, error) {
