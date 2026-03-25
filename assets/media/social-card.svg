@@ -1,162 +1,156 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0f1117"/>
-      <stop offset="50%" style="stop-color:#161b22"/>
-      <stop offset="100%" style="stop-color:#0f1117"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#6366f1"/>
-      <stop offset="100%" style="stop-color:#818cf8"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#22c55e"/>
-      <stop offset="100%" style="stop-color:#4ade80"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="30" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
     <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
     </pattern>
   </defs>
 
-  <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="#0a0a0a"/>
   <rect width="1200" height="630" fill="url(#grid)"/>
-  <ellipse cx="350" cy="315" rx="300" ry="200" fill="#6366f1" opacity="0.05" filter="url(#glow)"/>
 
   <!-- Left side: branding -->
-  <g transform="translate(80, 100)">
-    <!-- Logo -->
-    <rect width="64" height="64" rx="14" fill="url(#accent)"/>
-    <text x="32" y="44" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="30" font-weight="800" fill="white" letter-spacing="-1">Tv</text>
-    <rect x="12" y="52" width="40" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
-
+  <g transform="translate(80, 80)">
+    <!-- Icon -->
+    <rect width="56" height="56" rx="14" fill="#fafafa"/>
+    <rect x="10" y="14" width="30" height="7" rx="1.5" fill="#0a0a0a"/>
+    <rect x="21" y="14" width="10" height="28" rx="1.5" fill="#0a0a0a"/>
+    <rect x="15" y="14" width="30" height="7" rx="1.5" fill="#0a0a0a" opacity="0.12"/>
     <!-- Title -->
-    <text x="80" y="28" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="42" font-weight="800" fill="white" letter-spacing="-2">Telvar</text>
-    <text x="80" y="55" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="16" font-weight="400" fill="#818cf8" letter-spacing="3">DEVELOPER PORTAL</text>
+    <text x="70" y="24" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif" font-size="36" font-weight="700" fill="#fafafa" letter-spacing="-2">Telvar</text>
+    <text x="70" y="48" font-family="-apple-system,sans-serif" font-size="14" fill="rgba(255,255,255,0.35)" letter-spacing="3">DEVELOPER PORTAL</text>
   </g>
 
   <!-- Headline -->
-  <text x="80" y="230" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="36" font-weight="700" fill="white">Your infrastructure already</text>
-  <text x="80" y="275" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="36" font-weight="700" fill="white">describes itself.</text>
-  <text x="80" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="36" font-weight="700" fill="#818cf8">We just read it.</text>
+  <text x="80" y="210" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif" font-size="34" font-weight="600" fill="#fafafa">Your infrastructure already</text>
+  <text x="80" y="252" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif" font-size="34" font-weight="600" fill="#fafafa">describes itself.</text>
+  <text x="80" y="294" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif" font-size="34" font-weight="600" fill="rgba(255,255,255,0.4)">We just read it.</text>
 
   <!-- Feature list -->
-  <g transform="translate(80, 370)">
-    <circle cx="8" cy="8" r="4" fill="#6366f1"/>
-    <text x="24" y="13" font-family="-apple-system,sans-serif" font-size="16" fill="#e1e4eb">Auto-discovers services from GitHub + Kubernetes</text>
+  <g transform="translate(80, 340)">
+    <rect width="4" height="4" rx="1" fill="rgba(255,255,255,0.4)" y="6"/>
+    <text x="16" y="12" font-family="-apple-system,sans-serif" font-size="15" fill="rgba(255,255,255,0.6)">Auto-discovers services from GitHub + Kubernetes</text>
   </g>
-  <g transform="translate(80, 400)">
-    <circle cx="8" cy="8" r="4" fill="#6366f1"/>
-    <text x="24" y="13" font-family="-apple-system,sans-serif" font-size="16" fill="#e1e4eb">Scorecards, CVE checking, docs viewer</text>
+  <g transform="translate(80, 368)">
+    <rect width="4" height="4" rx="1" fill="rgba(255,255,255,0.4)" y="6"/>
+    <text x="16" y="12" font-family="-apple-system,sans-serif" font-size="15" fill="rgba(255,255,255,0.6)">Scorecards, CVE checking, docs viewer</text>
   </g>
-  <g transform="translate(80, 430)">
-    <circle cx="8" cy="8" r="4" fill="#6366f1"/>
-    <text x="24" y="13" font-family="-apple-system,sans-serif" font-size="16" fill="#e1e4eb">Single binary, SQLite, zero config</text>
+  <g transform="translate(80, 396)">
+    <rect width="4" height="4" rx="1" fill="rgba(255,255,255,0.4)" y="6"/>
+    <text x="16" y="12" font-family="-apple-system,sans-serif" font-size="15" fill="rgba(255,255,255,0.6)">Single Go binary, SQLite, zero config</text>
   </g>
-  <g transform="translate(80, 460)">
-    <circle cx="8" cy="8" r="4" fill="#22c55e"/>
-    <text x="24" y="13" font-family="-apple-system,sans-serif" font-size="16" fill="#e1e4eb">Open source (AGPLv3) - not another SaaS</text>
+  <g transform="translate(80, 424)">
+    <rect width="4" height="4" rx="1" fill="rgba(255,255,255,0.4)" y="6"/>
+    <text x="16" y="12" font-family="-apple-system,sans-serif" font-size="15" fill="rgba(255,255,255,0.6)">Open source (AGPLv3)</text>
   </g>
 
-  <!-- Right side: mock terminal/UI -->
-  <g transform="translate(650, 90)">
-    <!-- Terminal window -->
-    <rect width="480" height="440" rx="12" fill="#1a1d27" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-
+  <!-- Right side: mock UI -->
+  <g transform="translate(620, 60)">
+    <rect width="510" height="480" rx="12" fill="#111111" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
     <!-- Title bar -->
-    <rect width="480" height="36" rx="12" fill="#222633"/>
-    <rect y="24" width="480" height="12" fill="#222633"/>
-    <circle cx="20" cy="18" r="5" fill="#ff5f57"/>
-    <circle cx="38" cy="18" r="5" fill="#febc2e"/>
-    <circle cx="56" cy="18" r="5" fill="#28c840"/>
-    <text x="240" y="22" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="rgba(255,255,255,0.4)">telvar - localhost:7007</text>
+    <rect width="510" height="36" rx="12" fill="#181818"/>
+    <rect y="24" width="510" height="12" fill="#181818"/>
+    <circle cx="20" cy="18" r="4.5" fill="rgba(255,255,255,0.12)"/>
+    <circle cx="36" cy="18" r="4.5" fill="rgba(255,255,255,0.12)"/>
+    <circle cx="52" cy="18" r="4.5" fill="rgba(255,255,255,0.12)"/>
+    <text x="255" y="22" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="rgba(255,255,255,0.2)">telvar - localhost:7007</text>
 
-    <!-- Nav bar -->
-    <rect y="36" width="480" height="32" fill="rgba(255,255,255,0.03)"/>
-    <text x="20" y="56" font-family="-apple-system,sans-serif" font-size="13" font-weight="700" fill="#818cf8">T</text>
-    <text x="30" y="56" font-family="-apple-system,sans-serif" font-size="13" font-weight="700" fill="white">elvar</text>
-    <text x="100" y="56" font-family="-apple-system,sans-serif" font-size="12" fill="white">Services</text>
-    <text x="170" y="56" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.4)">Teams</text>
+    <!-- Nav -->
+    <rect y="36" width="510" height="28" fill="rgba(255,255,255,0.02)"/>
+    <!-- Icon mini in nav -->
+    <rect x="14" y="41" width="16" height="16" rx="4" fill="#fafafa"/>
+    <rect x="17" y="45" width="9" height="2.5" rx="0.5" fill="#111"/>
+    <rect x="20.5" y="45" width="3.5" height="9" rx="0.5" fill="#111"/>
+    <text x="40" y="54" font-family="-apple-system,sans-serif" font-size="11" font-weight="600" fill="rgba(255,255,255,0.7)">Services</text>
+    <text x="100" y="54" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.25)">Teams</text>
 
     <!-- Header -->
-    <text x="20" y="95" font-family="-apple-system,sans-serif" font-size="18" font-weight="600" fill="white">Services</text>
-    <rect x="390" y="78" width="70" height="26" rx="6" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-    <text x="425" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#818cf8">27</text>
+    <text x="20" y="90" font-family="-apple-system,sans-serif" font-size="16" font-weight="600" fill="rgba(255,255,255,0.9)">Services</text>
+    <rect x="420" y="75" width="70" height="22" rx="11" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="455" y="90" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.4)">27</text>
 
-    <!-- Search bar -->
-    <rect x="20" y="110" width="440" height="30" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <text x="32" y="130" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Search services...</text>
+    <!-- Search -->
+    <rect x="20" y="105" width="470" height="28" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="32" y="123" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.2)">Search services...</text>
 
-    <!-- Entity cards -->
-    <g transform="translate(20, 155)">
-      <rect width="215" height="90" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-      <text x="12" y="24" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="white">flyte</text>
-      <text x="12" y="42" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.4)">Workflow orchestration platform</text>
-      <rect x="12" y="52" width="55" height="16" rx="8" fill="rgba(99,102,241,0.2)"/>
-      <text x="39" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#818cf8">component</text>
-      <rect x="72" y="52" width="28" height="16" rx="8" fill="rgba(96,165,250,0.2)"/>
-      <text x="86" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#60a5fa">go</text>
-      <!-- Score bar -->
-      <rect x="12" y="76" width="60" height="4" rx="2" fill="rgba(255,255,255,0.08)"/>
-      <rect x="12" y="76" width="48" height="4" rx="2" fill="#22c55e"/>
-      <text x="78" y="81" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#22c55e">80%</text>
+    <!-- Cards row 1 -->
+    <g transform="translate(20, 148)">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flyte</text>
+      <text x="12" y="38" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.3)">Workflow orchestration platform</text>
+      <rect x="12" y="48" width="55" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="39" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">component</text>
+      <rect x="72" y="48" width="24" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="84" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">go</text>
+      <rect x="12" y="70" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+      <rect x="12" y="70" width="48" height="3" rx="1.5" fill="#fafafa" opacity="0.5"/>
+      <text x="78" y="74" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="rgba(255,255,255,0.5)">80%</text>
     </g>
 
-    <g transform="translate(245, 155)">
-      <rect width="215" height="90" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-      <text x="12" y="24" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="white">flytekit</text>
-      <text x="12" y="42" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.4)">Python SDK for Flyte</text>
-      <rect x="12" y="52" width="55" height="16" rx="8" fill="rgba(99,102,241,0.2)"/>
-      <text x="39" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#818cf8">component</text>
-      <rect x="72" y="52" width="45" height="16" rx="8" fill="rgba(96,165,250,0.2)"/>
-      <text x="94" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#60a5fa">python</text>
-      <rect x="12" y="76" width="60" height="4" rx="2" fill="rgba(255,255,255,0.08)"/>
-      <rect x="12" y="76" width="36" height="4" rx="2" fill="#eab308"/>
-      <text x="78" y="81" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#eab308">60%</text>
+    <g transform="translate(260, 148)">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flytekit</text>
+      <text x="12" y="38" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.3)">Python SDK for Flyte</text>
+      <rect x="12" y="48" width="55" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="39" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">component</text>
+      <rect x="72" y="48" width="42" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="93" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">python</text>
+      <rect x="12" y="70" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+      <rect x="12" y="70" width="36" height="3" rx="1.5" fill="#fafafa" opacity="0.3"/>
+      <text x="78" y="74" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="rgba(255,255,255,0.35)">60%</text>
     </g>
 
-    <g transform="translate(20, 255)">
-      <rect width="215" height="90" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-      <text x="12" y="24" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="white">flyteconsole</text>
-      <text x="12" y="42" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.4)">Web UI for Flyte</text>
-      <rect x="12" y="52" width="55" height="16" rx="8" fill="rgba(99,102,241,0.2)"/>
-      <text x="39" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#818cf8">component</text>
-      <rect x="72" y="52" width="55" height="16" rx="8" fill="rgba(96,165,250,0.2)"/>
-      <text x="99" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#60a5fa">javascript</text>
-      <rect x="12" y="76" width="60" height="4" rx="2" fill="rgba(255,255,255,0.08)"/>
-      <rect x="12" y="76" width="12" height="4" rx="2" fill="#ef4444"/>
-      <text x="78" y="81" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#ef4444">20%</text>
+    <!-- Cards row 2 -->
+    <g transform="translate(20, 245)">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flyteconsole</text>
+      <text x="12" y="38" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.3)">Web UI for Flyte</text>
+      <rect x="12" y="48" width="55" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="39" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">component</text>
+      <rect x="72" y="48" width="52" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="98" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">javascript</text>
+      <rect x="12" y="70" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+      <rect x="12" y="70" width="12" height="3" rx="1.5" fill="#fafafa" opacity="0.2"/>
+      <text x="78" y="74" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="rgba(255,255,255,0.2)">20%</text>
     </g>
 
-    <g transform="translate(245, 255)">
-      <rect width="215" height="90" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-      <text x="12" y="24" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="white">flyteidl</text>
-      <text x="12" y="42" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.4)">Protobuf definitions</text>
-      <rect x="12" y="52" width="25" height="16" rx="8" fill="rgba(168,139,250,0.2)"/>
-      <text x="24" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#a78bfa">api</text>
-      <rect x="42" y="52" width="28" height="16" rx="8" fill="rgba(96,165,250,0.2)"/>
-      <text x="56" y="63" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#60a5fa">go</text>
-      <rect x="12" y="76" width="60" height="4" rx="2" fill="rgba(255,255,255,0.08)"/>
-      <rect x="12" y="76" width="48" height="4" rx="2" fill="#22c55e"/>
-      <text x="78" y="81" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#22c55e">80%</text>
+    <g transform="translate(260, 245)">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flyteidl</text>
+      <text x="12" y="38" font-family="-apple-system,sans-serif" font-size="10" fill="rgba(255,255,255,0.3)">Protobuf definitions</text>
+      <rect x="12" y="48" width="24" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="24" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">api</text>
+      <rect x="40" y="48" width="24" height="14" rx="7" fill="rgba(255,255,255,0.05)"/>
+      <text x="52" y="58" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="rgba(255,255,255,0.35)">go</text>
+      <rect x="12" y="70" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+      <rect x="12" y="70" width="48" height="3" rx="1.5" fill="#fafafa" opacity="0.5"/>
+      <text x="78" y="74" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="rgba(255,255,255,0.5)">80%</text>
     </g>
 
-    <!-- Scrollbar hint -->
-    <rect x="470" y="155" width="3" height="180" rx="1.5" fill="rgba(255,255,255,0.06)"/>
-    <rect x="470" y="155" width="3" height="80" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+    <!-- Cards row 3 (partial, fade) -->
+    <g transform="translate(20, 342)" opacity="0.4">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flyte-docs</text>
+    </g>
+    <g transform="translate(260, 342)" opacity="0.4">
+      <rect width="228" height="85" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+      <text x="12" y="22" font-family="-apple-system,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.85)">flyte-sdk</text>
+    </g>
+
+    <!-- Fade gradient at bottom -->
+    <rect y="400" width="510" height="80" rx="0" fill="url(#fade)" opacity="0.8"/>
+
+    <!-- Scrollbar -->
+    <rect x="500" y="148" width="2.5" height="250" rx="1.25" fill="rgba(255,255,255,0.04)"/>
+    <rect x="500" y="148" width="2.5" height="100" rx="1.25" fill="rgba(255,255,255,0.1)"/>
   </g>
 
-  <!-- Bottom bar -->
-  <text x="80" y="540" font-family="-apple-system,sans-serif" font-size="14" fill="rgba(255,255,255,0.3)">github.com/atoolz/telvar</text>
-  <g transform="translate(80, 555)">
-    <rect width="140" height="28" rx="14" fill="url(#accent)"/>
-    <text x="70" y="19" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" font-weight="600" fill="white">Go + SQLite + htmx</text>
+  <!-- Bottom -->
+  <text x="80" y="530" font-family="-apple-system,sans-serif" font-size="13" fill="rgba(255,255,255,0.2)">github.com/atoolz/telvar</text>
+  <g transform="translate(80, 548)">
+    <rect width="140" height="26" rx="13" fill="rgba(255,255,255,0.06)"/>
+    <text x="70" y="17" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" font-weight="500" fill="rgba(255,255,255,0.4)">Go + SQLite + htmx</text>
   </g>
 
-  <!-- Bottom accent -->
-  <rect x="0" y="626" width="1200" height="4" fill="url(#accent)"/>
+  <!-- Top line -->
+  <rect x="0" y="0" width="1200" height="1" fill="rgba(255,255,255,0.06)"/>
 </svg>

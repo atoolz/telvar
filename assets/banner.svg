@@ -1,102 +1,72 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="480" viewBox="0 0 1280 480">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0f1117"/>
-      <stop offset="50%" style="stop-color:#161b22"/>
-      <stop offset="100%" style="stop-color:#0f1117"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#6366f1"/>
-      <stop offset="100%" style="stop-color:#818cf8"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#22c55e"/>
-      <stop offset="100%" style="stop-color:#4ade80"/>
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="40" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
     </pattern>
   </defs>
 
   <!-- Background -->
-  <rect width="1280" height="640" fill="url(#bg)"/>
-  <rect width="1280" height="640" fill="url(#grid)"/>
+  <rect width="1280" height="480" fill="#0a0a0a"/>
+  <rect width="1280" height="480" fill="url(#grid)"/>
 
-  <!-- Ambient glow -->
-  <ellipse cx="640" cy="280" rx="400" ry="200" fill="#6366f1" opacity="0.06" filter="url(#glow)"/>
+  <!-- Decorative code (left) -->
+  <text x="60" y="100" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">type Entity struct {</text>
+  <text x="60" y="118" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">  Name     string</text>
+  <text x="60" y="136" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">  Kind     EntityKind</text>
+  <text x="60" y="154" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">  Score    *ScoreResult</text>
+  <text x="60" y="172" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">}</text>
 
-  <!-- Decorative code fragments (left) -->
-  <text x="60" y="120" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">type Entity struct {</text>
-  <text x="60" y="140" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">  Name     string</text>
-  <text x="60" y="160" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">  Kind     EntityKind</text>
-  <text x="60" y="180" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">  Owner    string</text>
-  <text x="60" y="200" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">  Score    *ScoreResult</text>
-  <text x="60" y="220" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">}</text>
+  <!-- Decorative code (right) -->
+  <text x="940" y="340" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">scorecards:</text>
+  <text x="940" y="358" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">  - name: production-readiness</text>
+  <text x="940" y="376" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">    rules:</text>
+  <text x="940" y="394" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.04)">      - check: has_file("README.md")</text>
 
-  <!-- Decorative code fragments (right) -->
-  <text x="920" y="440" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">scorecards:</text>
-  <text x="920" y="460" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">  - name: production-readiness</text>
-  <text x="920" y="480" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">    rules:</text>
-  <text x="920" y="500" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">      - check: has_file("README.md")</text>
-  <text x="920" y="520" font-family="JetBrains Mono,Fira Code,Consolas,monospace" font-size="13" fill="rgba(255,255,255,0.06)">      - check: cve_count("critical") == 0</text>
-
-  <!-- Logo icon -->
-  <g transform="translate(530, 140)">
-    <rect width="80" height="80" rx="18" fill="url(#accent)"/>
-    <text x="40" y="55" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="36" font-weight="800" fill="white" letter-spacing="-2">Tv</text>
-    <rect x="14" y="64" width="52" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
+  <!-- Icon -->
+  <g transform="translate(568, 100)">
+    <rect width="72" height="72" rx="16" fill="#fafafa"/>
+    <rect x="13" y="17" width="38" height="9" rx="1.8" fill="#0a0a0a"/>
+    <rect x="28" y="17" width="13" height="36" rx="1.8" fill="#0a0a0a"/>
+    <rect x="21" y="17" width="38" height="9" rx="1.8" fill="#0a0a0a" opacity="0.12"/>
   </g>
 
   <!-- Title -->
-  <text x="640" y="290" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="72" font-weight="800" fill="white" letter-spacing="-3">Telvar</text>
+  <text x="640" y="232" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="64" font-weight="700" fill="#fafafa" letter-spacing="-3">Telvar</text>
 
   <!-- Accent line -->
-  <rect x="490" y="308" width="300" height="3" rx="1.5" fill="url(#accent)"/>
+  <rect x="540" y="248" width="200" height="1.5" rx="0.75" fill="rgba(255,255,255,0.15)"/>
 
   <!-- Subtitle -->
-  <text x="640" y="350" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="22" font-weight="300" fill="#e1e4eb" letter-spacing="6">DEVELOPER PORTAL</text>
+  <text x="640" y="282" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="18" font-weight="400" fill="rgba(255,255,255,0.5)" letter-spacing="5">DEVELOPER PORTAL</text>
 
   <!-- Tagline -->
-  <text x="640" y="392" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="16" fill="#818cf8" letter-spacing="1">Zero authoring  ·  One binary  ·  Five minutes</text>
+  <text x="640" y="318" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="16" fill="rgba(255,255,255,0.3)">Zero authoring  ·  One binary  ·  Five minutes</text>
 
   <!-- Feature pills -->
-  <g transform="translate(280, 430)">
-    <rect width="110" height="30" rx="15" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-    <text x="55" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#818cf8">GitHub</text>
+  <g transform="translate(280, 355)">
+    <rect width="90" height="28" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="45" y="18" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.4)">GitHub</text>
   </g>
-  <g transform="translate(410, 430)">
-    <rect width="110" height="30" rx="15" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-    <text x="55" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#818cf8">Kubernetes</text>
+  <g transform="translate(385, 355)">
+    <rect width="105" height="28" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="52" y="18" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.4)">Kubernetes</text>
   </g>
-  <g transform="translate(540, 430)">
-    <rect width="110" height="30" rx="15" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-    <text x="55" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#818cf8">Scorecards</text>
+  <g transform="translate(505, 355)">
+    <rect width="100" height="28" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="50" y="18" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.4)">Scorecards</text>
   </g>
-  <g transform="translate(670, 430)">
-    <rect width="110" height="30" rx="15" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
-    <text x="55" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#818cf8">PagerDuty</text>
-  </g>
-  <g transform="translate(800, 430)">
-    <rect width="110" height="30" rx="15" fill="rgba(34,197,94,0.15)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
-    <text x="55" y="20" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#4ade80">AGPLv3</text>
+  <g transform="translate(620, 355)">
+    <rect width="100" height="28" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <text x="50" y="18" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.4)">PagerDuty</text>
   </g>
 
-  <!-- Bottom info -->
-  <text x="640" y="540" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="rgba(255,255,255,0.25)">github.com/atoolz/telvar</text>
-
-  <!-- Go badge -->
-  <g transform="translate(555, 560)">
-    <rect width="170" height="32" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-    <text x="85" y="21" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="rgba(255,255,255,0.5)">Go + SQLite + htmx</text>
+  <!-- Bottom -->
+  <text x="640" y="430" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="13" fill="rgba(255,255,255,0.15)">github.com/atoolz/telvar</text>
+  <g transform="translate(565, 445)">
+    <rect width="150" height="26" rx="13" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="75" y="17" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="rgba(255,255,255,0.3)">Go + SQLite + htmx</text>
   </g>
 
-  <!-- Bottom accent border -->
-  <rect x="0" y="636" width="1280" height="4" fill="url(#accent)"/>
+  <!-- Top accent line -->
+  <rect x="0" y="0" width="1280" height="2" fill="rgba(255,255,255,0.08)"/>
 </svg>

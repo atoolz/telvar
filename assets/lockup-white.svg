@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="52" viewBox="0 0 280 52">
+  <!-- Icon -->
+  <rect width="48" height="48" rx="12" fill="#fafafa"/>
+  <rect x="9" y="11" width="26" height="6" rx="1.2" fill="#0a0a0a"/>
+  <rect x="19" y="11" width="9" height="26" rx="1.2" fill="#0a0a0a"/>
+  <rect x="13" y="11" width="26" height="6" rx="1.2" fill="#0a0a0a" opacity="0.12"/>
+  <!-- Wordmark -->
+  <text x="62" y="38" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="36" font-weight="700" fill="#fafafa" letter-spacing="-1.8">Telvar</text>
+</svg>
