@@ -2,12 +2,14 @@ package web
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"html/template"
 	"io/fs"
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/ahlert/telvar/internal/store"
 )
@@ -64,9 +66,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.mux.ServeHTTP(w, r)
 }
 
-func (s *Server) ListenAndServe(addr string) error {
-	slog.Info("web server starting", "addr", addr)
-	return http.ListenAndServe(addr, s)
+func (s *Server) ListenAndServe(ctx context.Context, addr string) error {
+	srv := &http.Server{Addr: addr, Handler: s}
+
+	errCh := make(chan error, 1)
+	go func() {
+		slog.Info("web server starting", "addr", addr)
+		errCh <- srv.ListenAndServe()
+	}()
+
+	select {
+	case err := <-errCh:
+		return err
+	case <-ctx.Done():
+		slog.Info("shutting down web server")
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		return srv.Shutdown(shutdownCtx)
+	}
 }
 
 func (s *Server) routes() {
@@ -94,7 +111,9 @@ func (s *Server) render(w http.ResponseWriter, page string, data any) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	buf.WriteTo(w)
+	if _, writeErr := buf.WriteTo(w); writeErr != nil {
+		slog.Error("writing response", "error", writeErr)
+	}
 }
 
 func (s *Server) renderPartial(w http.ResponseWriter, partial string, data any) {
@@ -113,5 +132,7 @@ func (s *Server) renderPartial(w http.ResponseWriter, partial string, data any) 
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	buf.WriteTo(w)
+	if _, writeErr := buf.WriteTo(w); writeErr != nil {
+		slog.Error("writing response", "error", writeErr)
+	}
 }
