@@ -14,6 +14,9 @@
     {{if .Entity.Framework}}<span class="badge badge-lang">{{.Entity.Framework}}</span>{{end}}
     {{if .Entity.Owner}}<span class="badge badge-owner">{{.Entity.Owner}}</span>{{end}}
   </div>
+  <div style="margin-top: 0.75rem;">
+    <a href="/entity/{{.Entity.ID}}/docs" class="btn btn-primary">View Docs</a>
+  </div>
 </div>
 
 {{if .Entity.Score}}

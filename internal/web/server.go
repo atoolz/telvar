@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ahlert/telvar/internal/docs"
 	"github.com/ahlert/telvar/internal/store"
 )
 
@@ -25,15 +26,17 @@ var tmplFuncs = template.FuncMap{
 
 type Server struct {
 	store    *store.Store
+	docs     *docs.Fetcher
 	pages    map[string]*template.Template
 	staticFS fs.FS
 	mux      *http.ServeMux
 }
 
-func New(s *store.Store, tmplFS fs.FS, statFS fs.FS) (*Server, error) {
+func New(s *store.Store, tmplFS fs.FS, statFS fs.FS, docsFetcher *docs.Fetcher) (*Server, error) {
 	pages := map[string][]string{
 		"catalog_list":  {"layout.html", "catalog_list.html", "entity_cards.html"},
 		"entity_detail": {"layout.html", "entity_detail.html"},
+		"entity_docs":   {"layout.html", "entity_docs.html"},
 	}
 
 	templates := make(map[string]*template.Template)
@@ -52,10 +55,11 @@ func New(s *store.Store, tmplFS fs.FS, statFS fs.FS) (*Server, error) {
 	templates["entity_cards"] = cardsT
 
 	srv := &Server{
-		store:     s,
-		pages:     templates,
-		staticFS:  statFS,
-		mux:       http.NewServeMux(),
+		store:    s,
+		docs:     docsFetcher,
+		pages:    templates,
+		staticFS: statFS,
+		mux:      http.NewServeMux(),
 	}
 
 	srv.routes()
@@ -91,6 +95,7 @@ func (s *Server) routes() {
 
 	s.mux.HandleFunc("GET /", s.handleCatalogList)
 	s.mux.HandleFunc("GET /entity/{id}", s.handleEntityDetail)
+	s.mux.HandleFunc("GET /entity/{id}/docs", s.handleEntityDocs)
 	s.mux.HandleFunc("GET /htmx/catalog/list", s.handleCatalogListPartial)
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 }

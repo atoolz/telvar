@@ -1,10 +1,10 @@
 package web
 
 import (
+	"html/template"
 	"log/slog"
 	"net/http"
 	"sort"
-	"strings"
 
 	"github.com/ahlert/telvar/internal/catalog"
 )
@@ -91,41 +91,92 @@ func (s *Server) handleEntityDetail(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+type entityDocsData struct {
+	CurrentPath  string
+	Entity       *catalog.Entity
+	RenderedHTML template.HTML
+	Error        string
+}
+
+func (s *Server) handleEntityDocs(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	entity, err := s.store.GetEntity(id)
+	if err != nil {
+		slog.Error("getting entity for docs", "id", id, "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if entity == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	data := entityDocsData{
+		CurrentPath: "/entity/" + id + "/docs",
+		Entity:      entity,
+	}
+
+	if s.docs != nil {
+		_, rendered, fetchErr := s.docs.FetchAndRender(r.Context(), entity)
+		if fetchErr != nil {
+			data.Error = fetchErr.Error()
+		} else {
+			data.RenderedHTML = rendered
+		}
+	} else {
+		data.Error = "Documentation fetcher not configured"
+	}
+
+	s.render(w, "entity_docs", data)
+}
+
 func (s *Server) handleHealthz(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(`{"ok":true}`))
 }
 
 func (s *Server) searchEntities(q, kind, lang string) ([]catalog.Entity, error) {
+	if q != "" {
+		entities, err := s.store.SearchEntities(q, 0)
+		if err != nil {
+			return nil, err
+		}
+
+		if kind == "" && lang == "" {
+			return entities, nil
+		}
+
+		var filtered []catalog.Entity
+		for _, e := range entities {
+			if kind != "" && string(e.Kind) != kind {
+				continue
+			}
+			if lang != "" && e.Language != lang {
+				continue
+			}
+			filtered = append(filtered, e)
+		}
+		return filtered, nil
+	}
+
 	entities, err := s.store.ListEntities(kind, 0)
 	if err != nil {
 		return nil, err
 	}
 
-	if q == "" && lang == "" {
+	if lang == "" {
 		return entities, nil
 	}
 
 	var filtered []catalog.Entity
 	for _, e := range entities {
-		if lang != "" && e.Language != lang {
-			continue
-		}
-		if q != "" && !matchesQuery(e, q) {
+		if e.Language != lang {
 			continue
 		}
 		filtered = append(filtered, e)
 	}
-
 	return filtered, nil
-}
-
-func matchesQuery(e catalog.Entity, q string) bool {
-	q = strings.ToLower(q)
-	return strings.Contains(strings.ToLower(e.Name), q) ||
-		strings.Contains(strings.ToLower(e.Description), q) ||
-		strings.Contains(strings.ToLower(e.Owner), q) ||
-		strings.Contains(strings.ToLower(string(e.Kind)), q)
 }
 
 func (s *Server) collectLanguages() []string {

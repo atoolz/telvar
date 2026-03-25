@@ -13,6 +13,7 @@ import (
 	"github.com/ahlert/telvar/assets"
 	"github.com/ahlert/telvar/internal/config"
 	ghconnector "github.com/ahlert/telvar/internal/connector/github"
+	"github.com/ahlert/telvar/internal/docs"
 	"github.com/ahlert/telvar/internal/scheduler"
 	"github.com/ahlert/telvar/internal/scorecard"
 	"github.com/ahlert/telvar/internal/store"
@@ -92,7 +93,11 @@ func serveCmd() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("accessing embedded static files: %w", err)
 			}
-			srv, err := web.New(db, tmplFS, statFS)
+			var docsFetcher *docs.Fetcher
+			if cfg.Connectors.GitHub != nil {
+				docsFetcher = docs.NewFetcher(ghconnector.NewClient(cfg.Connectors.GitHub))
+			}
+			srv, err := web.New(db, tmplFS, statFS, docsFetcher)
 			if err != nil {
 				return fmt.Errorf("creating web server: %w", err)
 			}

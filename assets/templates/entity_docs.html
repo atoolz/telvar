@@ -1,0 +1,24 @@
+{{define "title"}}{{.Entity.Name}} - Docs - Telvar{{end}}
+
+{{define "content"}}
+<div class="breadcrumb">
+  <a href="/">Services</a> / <a href="/entity/{{.Entity.ID}}">{{.Entity.Name}}</a> / Docs
+</div>
+
+<div class="detail-header">
+  <h1>{{.Entity.Name}}</h1>
+  {{if .Entity.Description}}<p class="description">{{.Entity.Description}}</p>{{end}}
+</div>
+
+{{if .Error}}
+<div class="detail-section">
+  <p style="color: var(--text-muted);">{{.Error}}</p>
+</div>
+{{else}}
+<div class="detail-section" style="line-height: 1.8;">
+  <div class="markdown-body">
+    {{.RenderedHTML}}
+  </div>
+</div>
+{{end}}
+{{end}}
