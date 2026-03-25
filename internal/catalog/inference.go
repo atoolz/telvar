@@ -18,7 +18,8 @@ func InferEntity(name string, repoURL string, files FileChecker) Entity {
 		Name:    name,
 		Kind:    KindComponent,
 		RepoURL: repoURL,
-		Tags:    make(map[string]string),
+		Tags:     make(map[string]string),
+		Metadata: make(map[string]string),
 	}
 
 	e.Language = inferLanguage(files)
