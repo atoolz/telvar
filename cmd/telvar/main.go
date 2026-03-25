@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/ahlert/telvar/internal/config"
+	ghconnector "github.com/ahlert/telvar/internal/connector/github"
+	"github.com/ahlert/telvar/internal/store"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +54,10 @@ func serveCmd() *cobra.Command {
 }
 
 func discoverCmd() *cobra.Command {
-	var cfgPath string
+	var (
+		cfgPath string
+		dbPath  string
+	)
 
 	cmd := &cobra.Command{
 		Use:   "discover",
@@ -62,14 +68,30 @@ func discoverCmd() *cobra.Command {
 				return fmt.Errorf("loading config: %w", err)
 			}
 
-			_ = cfg
-			fmt.Println("Running discovery...")
-			// TODO: run discovery pipeline
+			db, err := store.New(dbPath)
+			if err != nil {
+				return fmt.Errorf("opening database: %w", err)
+			}
+			defer db.Close()
+
+			if cfg.Connectors.GitHub == nil {
+				return fmt.Errorf("no GitHub connector configured")
+			}
+
+			client := ghconnector.NewClient(cfg.Connectors.GitHub)
+			scanner := ghconnector.NewScanner(client, db, &cfg.Discovery)
+
+			slog.Info("starting discovery", "source", "github", "org", cfg.Connectors.GitHub.Org)
+			if err := scanner.Run(cmd.Context()); err != nil {
+				return fmt.Errorf("discovery failed: %w", err)
+			}
+
 			return nil
 		},
 	}
 
 	cmd.Flags().StringVarP(&cfgPath, "config", "c", "telvar.yaml", "path to config file")
+	cmd.Flags().StringVarP(&dbPath, "db", "d", "telvar.db", "path to SQLite database")
 	return cmd
 }
 
